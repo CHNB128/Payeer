@@ -1,34 +1,29 @@
-(ns payeer.core-test
+(ns payeer.api-test
   (:require
    [clojure.test :refer :all]
    [payeer.api :refer :all]))
 
-(deftest auth-test
+(deftest api-test
   (testing "Authorization"
     (let [creditionals
           {:account "P1017450858"
            :apiId "871039145"
            :apiPass "Cp59qRPj9Ns3btOd"}]
-      (is (= creditionals (set-creditionals! creditionals))))))
+      (is (= creditionals (set-creditionals! creditionals)))))
 
-(deftest get-balance-test
   (testing "Get balance"
-    (is (not (nil? (get-balance))))))
+    (is (not (nil? (get-balance)))))
 
-(deftest get-payment-systems-test
   (testing "Get payment systems"
-    (is (not (nil? (get-payment-systems))))))
+    (is (not (nil? (get-payment-systems)))))
 
-(deftest get-history-test
   (testing "Get history"
-    (is (not (nil? (get-history))))))
+    (is (not (nil? (get-history)))))
 
-(deftest get-exchange-rate-test
   (testing "Get history"
     (is (not (nil? (get-exchange-rate :input))))
-    (is (not (nil? (get-exchange-rate :output))))))
+    (is (not (nil? (get-exchange-rate :output)))))
 
-(deftest pay-test
   (testing "Pay out"
     ; TODO: make auto generated params
     (let [payment-system-id 27313794
