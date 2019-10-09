@@ -3,14 +3,13 @@
    [clojure.test :refer :all]
    [payeer.api :refer :all]))
 
-(def creditionals
-  {:account "P1017450858"
-   :apiId "871039145"
-   :apiPass "Cp59qRPj9Ns3btOd"})
-
 (deftest auth-test
   (testing "Authorization"
-    (is (= creditionals (set-creditionals! creditionals)))))
+    (let [creditionals
+          {:account "P1017450858"
+           :apiId "871039145"
+           :apiPass "Cp59qRPj9Ns3btOd"}]
+      (is (= creditionals (set-creditionals! creditionals))))))
 
 (deftest get-balance-test
   (testing "Get balance"
@@ -31,9 +30,9 @@
 
 (deftest pay-test
   (testing "Pay out"
-    (let [payment-system-id nil
-          amount nil
-          currency nil
-          account nil])
-    (is (not (nil? (init-pay payment-system-id amount currency account))))
-    (is (not (nil? (pay payment-system-id amount currency account))))))
+    ; TODO: make auto generated params
+    (let [payment-system-id 27313794
+          amount 100
+          currency "RUB"
+          account "RUB"]
+      (is (not (nil? (init-pay payment-system-id amount currency account)))))))
