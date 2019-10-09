@@ -19,17 +19,17 @@
       (throw (Exception. (-> data :errors json/write-str))))))
 
 (defn set-creditionals! [{:keys [account apiId apiPass] :as data}]
-  (try (auth data)
-       (reset! creditionals data)
-       (catch Exception e (str "Caught exception: " (.getMessage e)))))
+  (auth data)
+  (reset! creditionals data))
 
 (defn request [url options]
   (when (= {}  @creditionals)
-    (throw (Exception. "Creditionals don't set. use `set-creditionals!` first"))
+    (throw (Exception. "Creditionals don't set. use `set-creditionals!` first")))
   (let [options (assoc default-options :form-params
                        (merge (:form-params options) @creditionals))
         {:keys [body status error]} @(http/post url options)
         data (json/read-str body :key-fn keyword)]
+    ; (println "r" body status error options data)
     (when-not (= [] (:errors data))
       (throw (Exception. (-> data :errors json/write-str))))
     (identity data)))
