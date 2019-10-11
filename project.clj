@@ -1,4 +1,4 @@
-(defproject payeer-clj "0.1.0"
+(defproject payeer "0.1.1"
   :description "Payeer api wraper for clojure"
   :url "https://github.com/CHNB128/Payeer-clj"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
