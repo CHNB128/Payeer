@@ -7,11 +7,12 @@
 
 (deftest url-generation-test
   (testing "Generate merchant link"
-    (let [url (generate-merchant-link 
-               {:domain "871014559"
+    (let [url (generate-merchant-link
+               {:shop-id "871014559"
                 :order-id 12345
                 :payeer-key payeer-key}
                {:amount 150
                 :currency "USD"
-                :description "Test payment №12345"})]
+                :description "Test payment №12345"}
+               {:lang "en"})]
       (is (= url "https://payeer.com/merchant/?m_shop=871014559&m_orderid=12345&m_amount=150.00&m_curr=USD&m_desc=VGVzdCBwYXltZW50IOKEljEyMzQ1&m_sign=FB8A2D7DA3ED23569C6A39810BB5427C204E67C57E5AA72BCED0B5A893C12635&lang=en")))))
