@@ -29,5 +29,5 @@
     (let [payment-system-id 27313794
           amount 100
           currency "RUB"
-          account "RUB"]
+          account "P1017450858"]
       (is (not (nil? (init-pay payment-system-id amount currency account)))))))
