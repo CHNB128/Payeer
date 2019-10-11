@@ -3,6 +3,7 @@
    java.util.Base64
    java.net.URLEncoder)
   (:require
+   [url-utils.core :refer [encode-params]]
    [org.httpkit.client :as http]
    [clojure.string :as string]
    [digest :as digest]))
@@ -60,23 +61,20 @@
 
 (def url "https://payeer.com/merchant/")
 
-(defn encode-params [request-params]
-  (let [encode #(URLEncoder/encode (str %) "UTF-8")
-        coded (for [[n v] request-params] (str (encode (name n)) "=" (encode v)))]
-    (apply str (interpose "&" coded))))
-
 (defn generate-merchant-link
-  [{:keys [domain order-id payeer-key]} {:keys [amount currency description]}]
+  [{:keys [shop-id order-id payeer-key]}
+   {:keys [amount currency description]}
+   {:keys [lang]}]
   (let [wrap-sign #(assoc %1 :m_sign (sign (assoc %1 :m_key payeer-key)))
         make #(str url "?" (encode-params %1))]
-    (-> {:m_shop domain
+    (-> {:m_shop shop-id
          :m_orderid order-id
          :m_amount (format-amount amount)
          :m_curr currency
          :m_desc (encode description)}
         wrap-sign
         make
-        (str "&lang=en"))))
+        (str "&lang=" lang))))
 
 (defn ips-valid [request]
   "Check if ip address in range 185.71.65.92, 185.71.65.189, 149.202.17.210"
