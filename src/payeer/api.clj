@@ -3,14 +3,15 @@
    [org.httpkit.client :as http]
    [clojure.data.json :as json]))
 
-(def url "https://payeer.com/ajax/api/api.php")
+; Base url
+(defonce ^:private url "https://payeer.com/ajax/api/api.php")
 
-(def default-options
+(def ^:private default-options
   {:form-params {}})
 
-(def creditionals (atom {}))
+(def ^:private creditionals (atom {}))
 
-(defn auth [{:keys [account apiId apiPass] :as creditionals}]
+(defn- auth [{:keys [account apiId apiPass] :as creditionals}]
   (let [options (-> default-options
                     (assoc :form-params creditionals))
         {:keys [body status error]} @(http/post url options)
@@ -22,7 +23,7 @@
   (auth data)
   (reset! creditionals data))
 
-(defn request [url options]
+(defn- request [url options]
   (when (= {}  @creditionals)
     (throw (Exception. "Creditionals don't set. use `set-creditionals!` first")))
   (let [options (assoc default-options :form-params
@@ -70,7 +71,8 @@
         data (request url options)]
     (:rate data)))
 
-(defn init-pay [payment-system-id amount currency account]
+(defn- base-pay
+  [payment-system-id amount currency account payout-type]
   (let [options (-> default-options
                     (assoc :form-params
                            (merge (:form-params default-options)
@@ -79,19 +81,16 @@
                                    :sumOut amount
                                    :curOut currency
                                    :param_ACCOUNT_NUMBER account}))
-                    (assoc-in [:form-params :action] "initOutput"))
+                    (assoc-in [:form-params :action] payout-type))
         data (request url options)]
     data))
 
-(defn pay [payment-system-id amount currency account]
-  (let [options (-> default-options
-                    (assoc :form-params
-                           (merge (:form-params default-options)
-                                  {:ps payment-system-id
-                                   :curIn currency
-                                   :sumOut amount
-                                   :curOut currency
-                                   :param_ACCOUNT_NUMBER account}))
-                    (assoc-in [:form-params :action] "output"))
-        data (request url options)]
-    data))
+(defn init-pay
+  "Get payout avalability"
+  [payment-system-id amount currency account]
+  (base-pay payment-system-id amount currency account "initOutput"))
+
+(defn pay
+  "Make real payout"
+  [payment-system-id amount currency account]
+  (base-pay payment-system-id amount currency account "output"))
