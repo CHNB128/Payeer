@@ -30,4 +30,4 @@
           amount 100
           currency "RUB"
           account "P1017450858"]
-      (is (not (nil? (init-pay payment-system-id amount currency account)))))))
+      (is (not (nil? (init-pay account payment-system-id amount currency)))))))

@@ -72,7 +72,7 @@
     (:rate data)))
 
 (defn- base-pay
-  [payment-system-id amount currency account payout-type]
+  [account payment-system-id amount currency payout-type]
   (let [options (-> default-options
                     (assoc :form-params
                            (merge (:form-params default-options)
@@ -87,10 +87,10 @@
 
 (defn init-pay
   "Get payout avalability"
-  [payment-system-id amount currency account]
+  [account payment-system-id amount currency]
   (base-pay payment-system-id amount currency account "initOutput"))
 
 (defn pay
   "Make real payout"
-  [payment-system-id amount currency account]
+  [account payment-system-id amount currency]
   (base-pay payment-system-id amount currency account "output"))
