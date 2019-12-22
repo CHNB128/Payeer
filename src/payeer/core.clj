@@ -33,8 +33,8 @@
 
 (defn generate-merchant-link
   "Generate link for replanish balance"
-  [{:keys [shop-id order-id payeer-key]}
-   {:keys [amount currency description]}
+  [{:keys [shop-id payeer-key]}
+   {:keys [order-id amount currency description]}
    {:keys [lang]}]
   (let [wrap-sign #(assoc %1 :m_sign (sign (assoc %1 :m_key payeer-key)))
         make #(str url "?" (encode-params %1))]
@@ -55,10 +55,10 @@
 
 (defn handler
   "Handler for 'status' endpoint"
-  [api-key {:keys [body] :as request} callback]
+  [payeer-key {:keys [body] :as request} callback]
   (ips-valid request)
   (when-not (and (nil? (:m_operation_id body)) (nil? (:m_sign body)))
-    (let [hash (-> (assoc body :m_key api-key) sign)]
+    (let [hash (-> (assoc body :m_key payeer-key) sign)]
       (if (and (= (:m_sign body) hash) (= (:m_status body) "success"))
         (callback "success" (:m_orderid body))
         (callback "fail" (:m_orderid body))))))
